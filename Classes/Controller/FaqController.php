@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MaiSpace\Faq\Controller;
+namespace Maispace\MaiFaq\Controller;
 
-use MaiSpace\Faq\Domain\Repository\FaqCategoryRepository;
-use MaiSpace\Faq\Domain\Repository\FaqEntryRepository;
+use Maispace\MaiFaq\Domain\Repository\FaqCategoryRepository;
+use Maispace\MaiFaq\Domain\Repository\FaqEntryRepository;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 

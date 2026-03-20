@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MaiSpace\Faq\Domain\Repository;
+namespace Maispace\MaiFaq\Domain\Repository;
 
-use MaiSpace\Faq\Domain\Model\FaqCategory;
+use Maispace\MaiFaq\Domain\Model\FaqCategory;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;

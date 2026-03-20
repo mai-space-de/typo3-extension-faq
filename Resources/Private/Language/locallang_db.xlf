@@ -3,22 +3,22 @@
     <file source-language="en" datatype="plaintext" original="messages" date="2024-01-01T00:00:00Z" product-name="faq">
         <header/>
         <body>
-            <trans-unit id="tx_faq_domain_model_faqcategory">
+            <trans-unit id="tx_maifaq_domain_model_faqcategory">
                 <source>FAQ Category</source>
             </trans-unit>
-            <trans-unit id="tx_faq_domain_model_faqcategory.title">
+            <trans-unit id="tx_maifaq_domain_model_faqcategory.title">
                 <source>Title</source>
             </trans-unit>
-            <trans-unit id="tx_faq_domain_model_faqentry">
+            <trans-unit id="tx_maifaq_domain_model_faqentry">
                 <source>FAQ Entry</source>
             </trans-unit>
-            <trans-unit id="tx_faq_domain_model_faqentry.question">
+            <trans-unit id="tx_maifaq_domain_model_faqentry.question">
                 <source>Question</source>
             </trans-unit>
-            <trans-unit id="tx_faq_domain_model_faqentry.answer">
+            <trans-unit id="tx_maifaq_domain_model_faqentry.answer">
                 <source>Answer</source>
             </trans-unit>
-            <trans-unit id="tx_faq_domain_model_faqentry.category">
+            <trans-unit id="tx_maifaq_domain_model_faqentry.category">
                 <source>Category</source>
             </trans-unit>
             <trans-unit id="plugin.accordion.title">

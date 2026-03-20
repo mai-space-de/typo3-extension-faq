@@ -1,20 +1,20 @@
-plugin.tx_faq {
+plugin.tx_maifaq {
     view {
         templateRootPaths {
             0 = EXT:faq/Resources/Private/Templates/
-            10 = {$plugin.tx_faq.view.templateRootPath}
+            10 = {$plugin.tx_maifaq.view.templateRootPath}
         }
         partialRootPaths {
             0 = EXT:faq/Resources/Private/Partials/
-            10 = {$plugin.tx_faq.view.partialRootPath}
+            10 = {$plugin.tx_maifaq.view.partialRootPath}
         }
         layoutRootPaths {
             0 = EXT:faq/Resources/Private/Layouts/
-            10 = {$plugin.tx_faq.view.layoutRootPath}
+            10 = {$plugin.tx_maifaq.view.layoutRootPath}
         }
     }
     persistence {
-        storagePid = {$plugin.tx_faq.persistence.storagePid}
+        storagePid = {$plugin.tx_maifaq.persistence.storagePid}
     }
     settings {
         itemsPerPage = 0

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MaiSpace\Faq\Tests\Unit\Domain\Model;
+namespace Maispace\MaiFaq\Tests\Unit\Domain\Model;
 
-use MaiSpace\Faq\Domain\Model\FaqCategory;
+use Maispace\MaiFaq\Domain\Model\FaqCategory;
 use PHPUnit\Framework\TestCase;
 
 class FaqCategoryTest extends TestCase
