@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2024-01-01T00:00:00Z" product-name="faq">
+        <header/>
+        <body>
+            <trans-unit id="tx_faq_domain_model_faqcategory">
+                <source>FAQ Category</source>
+            </trans-unit>
+            <trans-unit id="tx_faq_domain_model_faqcategory.title">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_faq_domain_model_faqentry">
+                <source>FAQ Entry</source>
+            </trans-unit>
+            <trans-unit id="tx_faq_domain_model_faqentry.question">
+                <source>Question</source>
+            </trans-unit>
+            <trans-unit id="tx_faq_domain_model_faqentry.answer">
+                <source>Answer</source>
+            </trans-unit>
+            <trans-unit id="tx_faq_domain_model_faqentry.category">
+                <source>Category</source>
+            </trans-unit>
+            <trans-unit id="plugin.accordion.title">
+                <source>FAQ: Accordion</source>
+            </trans-unit>
+            <trans-unit id="plugin.tabs.title">
+                <source>FAQ: Category Tabs</source>
+            </trans-unit>
+            <trans-unit id="plugin.search.title">
+                <source>FAQ: Search</source>
+            </trans-unit>
+            <trans-unit id="flexform.storagePid">
+                <source>Storage Page</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

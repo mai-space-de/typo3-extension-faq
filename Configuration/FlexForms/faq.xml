@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<T3DataStructure>
+    <ROOT>
+        <type>array</type>
+        <el>
+            <sDEF>
+                <ROOT>
+                    <type>array</type>
+                    <el>
+                        <storagePid>
+                            <label>LLL:EXT:faq/Resources/Private/Language/locallang_db.xlf:flexform.storagePid</label>
+                            <config>
+                                <type>group</type>
+                                <allowed>pages</allowed>
+                                <size>1</size>
+                                <maxitems>1</maxitems>
+                            </config>
+                        </storagePid>
+                    </el>
+                </ROOT>
+            </sDEF>
+        </el>
+    </ROOT>
+</T3DataStructure>

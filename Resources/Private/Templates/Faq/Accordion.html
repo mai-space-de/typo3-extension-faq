@@ -1,0 +1,39 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:layout name="Default" />
+
+<f:section name="main">
+    <div class="faq-accordion">
+        <f:if condition="{entries -> f:count()} > 0">
+            <f:then>
+                <dl class="faq-accordion__list">
+                    <f:for each="{entries}" as="entry">
+                        <div class="faq-accordion__item">
+                            <dt class="faq-accordion__question">
+                                <button class="faq-accordion__toggle"
+                                        type="button"
+                                        aria-expanded="false"
+                                        aria-controls="faq-answer-{entry.uid}">
+                                    {entry.question}
+                                </button>
+                            </dt>
+                            <dd class="faq-accordion__answer"
+                                id="faq-answer-{entry.uid}"
+                                hidden="hidden">
+                                <f:format.html>{entry.answer}</f:format.html>
+                            </dd>
+                        </div>
+                    </f:for>
+                </dl>
+            </f:then>
+            <f:else>
+                <p class="faq-accordion__empty">
+                    <f:translate key="LLL:EXT:faq/Resources/Private/Language/locallang.xlf:accordion.noEntries" />
+                </p>
+            </f:else>
+        </f:if>
+    </div>
+</f:section>
+
+</html>
