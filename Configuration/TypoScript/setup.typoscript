@@ -1,0 +1,22 @@
+plugin.tx_faq {
+    view {
+        templateRootPaths {
+            0 = EXT:faq/Resources/Private/Templates/
+            10 = {$plugin.tx_faq.view.templateRootPath}
+        }
+        partialRootPaths {
+            0 = EXT:faq/Resources/Private/Partials/
+            10 = {$plugin.tx_faq.view.partialRootPath}
+        }
+        layoutRootPaths {
+            0 = EXT:faq/Resources/Private/Layouts/
+            10 = {$plugin.tx_faq.view.layoutRootPath}
+        }
+    }
+    persistence {
+        storagePid = {$plugin.tx_faq.persistence.storagePid}
+    }
+    settings {
+        itemsPerPage = 0
+    }
+}
