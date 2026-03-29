@@ -5,7 +5,7 @@
 
 FAQ extension with accordion view, category tabs, and a JavaScript search/filter widget. Categories use TYPO3 `sys_category`, sharing the same tree as `mai_news`, `mai_gallery`, and `mai_timeline`.
 
-**Requires:** TYPO3 13.4 LTS / 14.0 · PHP 8.2+
+**Requires:** TYPO3 13.4 LTS / 14.1 · PHP 8.2+
 
 ---
 
