@@ -1,46 +1,40 @@
-# typo3-extension-faq
+# maispace/mai-faq — TYPO3 Extension
+[![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue)](https://www.php.net/)
+[![TYPO3](https://img.shields.io/badge/TYPO3-13.4%20LTS-orange)](https://typo3.org/)
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
-A TYPO3 CMS extension that provides a fully-featured FAQ system.
+FAQ extension with accordion view, category tabs, and a JavaScript search/filter widget. Categories use TYPO3 `sys_category`, sharing the same tree as `mai_news`, `mai_gallery`, and `mai_timeline`.
 
-## Features
+**Requires:** TYPO3 13.4 LTS / 14.0 · PHP 8.2+
 
-- **Model: FaqCategory** – Groups FAQ entries into named categories.
-- **Model: FaqEntry** – Each entry has a question, an RTE-enabled answer, an optional category and a manual sort order.
-- **Plugin: Accordion** – Renders all FAQ entries as an accessible accordion (`Akkordeon-Ansicht`).
-- **Plugin: Category Tabs** – Renders FAQ entries grouped into category tabs (`Kategorie-Tabs`).
-- **Plugin: Search** – A search-filter widget that queries entries by keyword (`Suchfilter-Widget`).
-
-## Requirements
-
-- TYPO3 CMS 12.4 or 13.x
-- PHP 8.1+
+---
 
 ## Installation
 
-Install via Composer:
-
 ```bash
-composer require mai-space-de/faq
+composer require maispace/mai-faq
 ```
 
-Or copy the extension into `typo3conf/ext/faq/` and activate it in the Extension Manager.
+---
 
-## Usage
+## Development
 
-1. Create a **SysFolder** and add FAQ Categories and FAQ Entries there.
-2. Add one of the three content elements to a page:
-   - **FAQ: Accordion**
-   - **FAQ: Category Tabs**
-   - **FAQ: Search**
-3. Set the *Storage Page* in the plugin FlexForm to the SysFolder created in step 1.
-
-## Running tests
+### Linting
 
 ```bash
-composer install
-./vendor/bin/phpunit
+composer lint:check     # Run all linters
+composer lint:fix       # Fix auto-fixable issues
 ```
+
+### Testing
+
+```bash
+composer test           # Run all tests
+composer test:unit      # Run unit tests only
+```
+
+---
 
 ## License
 
-GPL-2.0-or-later
+GPL-2.0-or-later — see [LICENSE](../../LICENSE) for details.
