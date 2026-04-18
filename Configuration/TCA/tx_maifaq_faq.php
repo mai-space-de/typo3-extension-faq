@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Maispace\MaiBase\TableConfigurationArray\FieldConfig\CategoryConfig;
+use Maispace\MaiBase\TableConfigurationArray\FieldConfig\InputConfig;
+use Maispace\MaiBase\TableConfigurationArray\FieldConfig\TextConfig;
 use Maispace\MaiBase\TableConfigurationArray\Helper;
 use Maispace\MaiBase\TableConfigurationArray\Table;
 
@@ -16,24 +19,17 @@ return (new Table($lang('table.tx_maifaq_faq')))
     ->addColumn(
         'question',
         $lang('tx_maifaq_faq.question'),
-        ['type' => 'input', 'size' => 50, 'max' => 255, 'eval' => 'trim,required']
+        (new InputConfig())->setSize(50)->setMax(255)->setEval('trim,required')
     )
     ->addColumn(
         'answer',
         $lang('tx_maifaq_faq.answer'),
-        [
-            'type' => 'text',
-            'rows' => 10,
-            'cols' => 50,
-            'enableRichtext' => true,
-            'richtextConfiguration' => 'default',
-            'eval' => 'required',
-        ]
+        (new TextConfig())->setRows(10)->setCols(50)->enableRte()->setRichtextConfiguration('default')->setEval('required')
     )
     ->addColumn(
         'categories',
         $lang('tx_maifaq_faq.categories'),
-        ['type' => 'category']
+        new CategoryConfig()
     )
     ->addTypeShowItem(
         '0',
