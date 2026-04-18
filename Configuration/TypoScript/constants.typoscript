@@ -1,0 +1,10 @@
+plugin.tx_maifaq_list {
+    view {
+        templateRootPath =
+        partialRootPath =
+        layoutRootPath =
+    }
+    persistence {
+        storagePid =
+    }
+}

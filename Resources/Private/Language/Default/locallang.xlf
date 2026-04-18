@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2024-01-01T00:00:00Z" product-name="mai_faq">
+        <header/>
+        <body>
+            <trans-unit id="faq.all">
+                <source>All</source>
+            </trans-unit>
+            <trans-unit id="search.placeholder">
+                <source>Search FAQs...</source>
+            </trans-unit>
+            <trans-unit id="search.label">
+                <source>Filter FAQs</source>
+            </trans-unit>
+            <trans-unit id="search.noResults">
+                <source>No FAQs found.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

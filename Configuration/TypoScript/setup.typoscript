@@ -1,0 +1,25 @@
+plugin.tx_maifaq_list {
+    view {
+        templateRootPaths {
+            0 = EXT:mai_faq/Resources/Private/Templates/
+            10 = {$plugin.tx_maifaq_list.view.templateRootPath}
+        }
+        partialRootPaths {
+            0 = EXT:mai_faq/Resources/Private/Partials/
+            10 = {$plugin.tx_maifaq_list.view.partialRootPath}
+        }
+        layoutRootPaths {
+            0 = EXT:mai_faq/Resources/Private/Layouts/
+            10 = {$plugin.tx_maifaq_list.view.layoutRootPath}
+        }
+    }
+    persistence {
+        storagePid = {$plugin.tx_maifaq_list.persistence.storagePid}
+    }
+    settings {
+        showCategoryTabs = 1
+        showSearch = 1
+    }
+}
+
+

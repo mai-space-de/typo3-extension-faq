@@ -1,0 +1,85 @@
+<html
+    data-namespace-typo3-fluid="true"
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+>
+<f:section name="main">
+    <div
+        class="mai-faq"
+        data-faq-container="1"
+        aria-label="{f:translate(key: 'search.label', extensionName: 'mai_faq')}"
+    >
+        <f:if condition="{settings.showSearch}">
+            <div class="mai-faq__search">
+                <label for="mai-faq-search" class="sr-only">
+                    <f:translate key="search.label" extensionName="mai_faq"/>
+                </label>
+                <input
+                    type="search"
+                    id="mai-faq-search"
+                    class="mai-faq__search-input"
+                    placeholder="{f:translate(key: 'search.placeholder', extensionName: 'mai_faq')}"
+                    data-faq-search="1"
+                    autocomplete="off"
+                />
+            </div>
+        </f:if>
+
+        <f:if condition="{settings.showCategoryTabs} && {categories}">
+            <div class="mai-faq__tabs" role="tablist" data-faq-tabs="1">
+                <button
+                    type="button"
+                    class="mai-faq__tab mai-faq__tab--active"
+                    role="tab"
+                    aria-selected="true"
+                    data-faq-tab="all"
+                >
+                    <f:translate key="faq.all" extensionName="mai_faq"/>
+                </button>
+                <f:for each="{categories}" as="category">
+                    <button
+                        type="button"
+                        class="mai-faq__tab"
+                        role="tab"
+                        aria-selected="false"
+                        data-faq-tab="{category.uid}"
+                    >
+                        {category.title}
+                    </button>
+                </f:for>
+            </div>
+        </f:if>
+
+        <div class="mai-faq__list" data-faq-list="1">
+            <f:if condition="{faqs}">
+                <f:then>
+                    <f:for each="{faqs}" as="faq">
+                        <details
+                            class="mai-faq__item"
+                            data-faq-item="1"
+                            data-faq-question="{faq.question}"
+                            data-faq-answer="{faq.answer -> f:format.stripTags()}"
+                            data-faq-categories="{f:for(each: faq.categories, as: 'cat', iteration: 'i')}{cat.uid}{f:if(condition: i.isLast, else: ',')}{/f:for}"
+                        >
+                            <summary class="mai-faq__question">
+                                {faq.question}
+                            </summary>
+                            <div class="mai-faq__answer">
+                                <f:format.html>{faq.answer}</f:format.html>
+                            </div>
+                        </details>
+                    </f:for>
+                </f:then>
+                <f:else>
+                    <p class="mai-faq__empty">
+                        <f:translate key="search.noResults" extensionName="mai_faq"/>
+                    </p>
+                </f:else>
+            </f:if>
+        </div>
+
+        <p class="mai-faq__no-results" hidden data-faq-no-results="1">
+            <f:translate key="search.noResults" extensionName="mai_faq"/>
+        </p>
+    </div>
+</f:section>
+</html>

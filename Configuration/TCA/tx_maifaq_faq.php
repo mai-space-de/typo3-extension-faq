@@ -11,6 +11,7 @@ use Maispace\MaiBase\TableConfigurationArray\Table;
 $lang = Helper::localLangHelperFactory('mai_faq', 'Default/locallang_tca.xlf');
 
 return (new Table($lang('table.tx_maifaq_faq')))
+    ->setSearchFields('question,answer')
     ->setDefaultConfig()
     ->setLabel('question')
     ->setIconFile('EXT:mai_faq/Resources/Public/Icons/tx_maifaq_faq.svg')

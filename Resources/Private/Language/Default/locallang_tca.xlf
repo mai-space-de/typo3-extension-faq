@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2024-01-01T00:00:00Z" product-name="mai_faq">
+        <header/>
+        <body>
+            <trans-unit id="table.tx_maifaq_faq">
+                <source>FAQ</source>
+            </trans-unit>
+            <trans-unit id="tx_maifaq_faq.question">
+                <source>Question</source>
+            </trans-unit>
+            <trans-unit id="tx_maifaq_faq.answer">
+                <source>Answer</source>
+            </trans-unit>
+            <trans-unit id="tx_maifaq_faq.categories">
+                <source>Categories</source>
+            </trans-unit>
+            <trans-unit id="tab.language">
+                <source>Language</source>
+            </trans-unit>
+            <trans-unit id="tab.access">
+                <source>Access</source>
+            </trans-unit>
+            <trans-unit id="ctype.faq_list">
+                <source>FAQ List</source>
+            </trans-unit>
+            <trans-unit id="plugin.list.title">
+                <source>FAQ: List</source>
+            </trans-unit>
+            <trans-unit id="flexform.sheet.general">
+                <source>General</source>
+            </trans-unit>
+            <trans-unit id="flexform.field.pages">
+                <source>Storage Pages</source>
+            </trans-unit>
+            <trans-unit id="flexform.field.categoryUids">
+                <source>Categories (Tabs)</source>
+            </trans-unit>
+            <trans-unit id="flexform.field.showCategoryTabs">
+                <source>Show Category Tabs</source>
+            </trans-unit>
+            <trans-unit id="flexform.field.showSearch">
+                <source>Show Search Filter</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
