@@ -13,18 +13,17 @@ $lang = Helper::localLangHelperFactory('mai_faq', 'Default/locallang_tca.xlf');
 return (new Table($lang('table.tx_maifaq_faq')))
     ->setDefaultConfig()
     ->setLabel('question')
-    ->setSearchFields('question, answer')
     ->setIconFile('EXT:mai_faq/Resources/Public/Icons/tx_maifaq_faq.svg')
     ->setSortingField()
     ->addColumn(
         'question',
         $lang('tx_maifaq_faq.question'),
-        (new InputConfig())->setSize(50)->setMax(255)->setEval('trim,required')
+        (new InputConfig())->setSize(50)->setMax(255)->setEval('trim')->setRequired()
     )
     ->addColumn(
         'answer',
         $lang('tx_maifaq_faq.answer'),
-        (new TextConfig())->setRows(10)->setCols(50)->enableRte()->setRichtextConfiguration('default')->setEval('required')
+        (new TextConfig())->setRows(10)->setCols(50)->enableRte()->setRichtextConfiguration('default')->setRequired()
     )
     ->addColumn(
         'categories',
