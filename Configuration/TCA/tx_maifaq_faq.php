@@ -14,7 +14,7 @@ return (new Table($lang('table.tx_maifaq_faq')))
     ->setSearchFields('question,answer')
     ->setDefaultConfig()
     ->setLabel('question')
-    ->setIconFile('EXT:mai_faq/Resources/Public/Icons/tx_maifaq_faq.svg')
+    ->setIconFile('EXT:mai_base/Resources/Public/Icons/generic_table.svg')
     ->setSortingField()
     ->addColumn(
         'question',

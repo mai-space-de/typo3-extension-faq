@@ -13,11 +13,11 @@ $lang = Helper::localLangHelperFactory('mai_faq', 'Default/locallang_tca.xlf');
     'MaiFaq',
     'List',
     $lang('plugin.list.title'),
-    'ext-maispace-mai_faq',
+    'mai-content',
     'maispace_feature',
 );
 
-(new CType('maispace_faq_list', $lang('ctype.faq_list'), 'ext-maispace-mai_faq'))
+(new CType('maispace_faq_list', $lang('ctype.faq_list'), 'mai-content'))
     ->addDefaultHeaderPalette()
     ->addCustomFields('pi_flexform')
     ->addDefaultLanguageTab()
