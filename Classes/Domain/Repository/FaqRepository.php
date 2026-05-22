@@ -19,7 +19,7 @@ class FaqRepository extends Repository
     {
         $query = $this->createQuery();
         $query->matching(
-            $query->contains('categories', $categoryUid)
+            $query->contains('categories', $categoryUid),
         );
 
         return $query->execute();
@@ -38,7 +38,7 @@ class FaqRepository extends Repository
         $query = $this->createQuery();
         $query->getQuerySettings()->setStoragePageIds($pageUids);
         $query->matching(
-            $query->contains('categories', $categoryUid)
+            $query->contains('categories', $categoryUid),
         );
 
         return $query->execute();

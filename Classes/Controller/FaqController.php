@@ -22,8 +22,7 @@ class FaqController extends AbstractActionController
     public function __construct(
         private readonly FaqRepository $faqRepository,
         private readonly ConnectionPool $connectionPool,
-    ) {
-    }
+    ) {}
 
     public function injectPageRenderer(PageRenderer $pageRenderer): void
     {
@@ -40,7 +39,7 @@ class FaqController extends AbstractActionController
         $settings = $this->getSettings();
 
         $pageUids = $this->resolveStoragePageUids();
-        $categoryUid = (int)($settings['categoryUid'] ?? 0);
+        $categoryUid = (int) ($settings['categoryUid'] ?? 0);
 
         if ($pageUids !== [] && $categoryUid > 0) {
             $faqs = $this->faqRepository->findFromPagesByCategoryUid($pageUids, $categoryUid);
@@ -77,7 +76,7 @@ class FaqController extends AbstractActionController
         }
 
         return array_filter(
-            array_map('intval', explode(',', (string)$pages)),
+            array_map('intval', explode(',', (string) $pages)),
             static fn(int $uid): bool => $uid > 0,
         );
     }
@@ -90,7 +89,7 @@ class FaqController extends AbstractActionController
         }
 
         $uids = array_filter(
-            array_map('intval', explode(',', (string)$categoryUids)),
+            array_map('intval', explode(',', (string) $categoryUids)),
             static fn(int $uid): bool => $uid > 0,
         );
 
