@@ -49,6 +49,16 @@
                             </config>
                         </TCEforms>
                     </settings.showSearch>
+                    <settings.showSorting>
+                        <TCEforms>
+                            <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.showSorting</label>
+                            <config>
+                                <type>check</type>
+                                <renderType>checkboxToggle</renderType>
+                                <default>1</default>
+                            </config>
+                        </TCEforms>
+                    </settings.showSorting>
                 </el>
             </ROOT>
         </sDEF>

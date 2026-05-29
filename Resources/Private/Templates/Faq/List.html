@@ -6,23 +6,56 @@
     <div
         class="mai-faq"
         data-faq-container="1"
+        data-faq-page-uids="{settings.pages}"
+        data-faq-category-uids="{settings.categoryUids}"
         aria-label="{f:translate(key: 'search.label', extensionName: 'mai_faq')}"
     >
-        <f:if condition="{settings.showSearch}">
-            <div class="mai-faq__search">
-                <label for="mai-faq-search" class="sr-only">
-                    <f:translate key="search.label" extensionName="mai_faq"/>
-                </label>
-                <input
-                    type="search"
-                    id="mai-faq-search"
-                    class="mai-faq__search-input"
-                    placeholder="{f:translate(key: 'search.placeholder', extensionName: 'mai_faq')}"
-                    data-faq-search="1"
-                    autocomplete="off"
-                />
-            </div>
-        </f:if>
+        <div class="mai-faq__toolbar">
+            <f:if condition="{settings.showSearch}">
+                <div class="mai-faq__search">
+                    <label for="mai-faq-search" class="sr-only">
+                        <f:translate key="search.label" extensionName="mai_faq"/>
+                    </label>
+                    <input
+                        type="search"
+                        id="mai-faq-search"
+                        class="mai-faq__search-input"
+                        placeholder="{f:translate(key: 'search.placeholder', extensionName: 'mai_faq')}"
+                        data-faq-search="1"
+                        autocomplete="off"
+                    />
+                </div>
+            </f:if>
+
+            <f:if condition="{settings.showSorting}">
+                <div class="mai-faq__sort">
+                    <label for="mai-faq-sort" class="mai-faq__sort-label">
+                        <f:translate key="sort.label" extensionName="mai_faq"/>
+                    </label>
+                    <select
+                        id="mai-faq-sort"
+                        class="mai-faq__sort-select"
+                        data-faq-sort="1"
+                    >
+                        <option value="sorting,asc">
+                            <f:translate key="sort.sorting.asc" extensionName="mai_faq"/>
+                        </option>
+                        <option value="question,asc">
+                            <f:translate key="sort.question.asc" extensionName="mai_faq"/>
+                        </option>
+                        <option value="question,desc">
+                            <f:translate key="sort.question.desc" extensionName="mai_faq"/>
+                        </option>
+                        <option value="uid,desc">
+                            <f:translate key="sort.uid.desc" extensionName="mai_faq"/>
+                        </option>
+                        <option value="uid,asc">
+                            <f:translate key="sort.uid.asc" extensionName="mai_faq"/>
+                        </option>
+                    </select>
+                </div>
+            </f:if>
+        </div>
 
         <f:if condition="{settings.showCategoryTabs} && {categories}">
             <div class="mai-faq__tabs" role="tablist" data-faq-tabs="1">
@@ -56,6 +89,7 @@
                         <details
                             class="mai-faq__item"
                             data-faq-item="1"
+                            data-faq-uid="{faq.uid}"
                             data-faq-question="{faq.question}"
                             data-faq-answer="{faq.answer -> f:format.stripTags()}"
                             data-faq-categories="{f:for(each: faq.categories, as: 'cat', iteration: 'i')}{cat.uid}{f:if(condition: i.isLast, else: ',')}{/f:for}"

@@ -110,6 +110,97 @@ plugin.tx_maifaq_list.settings {
 
 Relations are stored in `sys_category_record_mm` (TYPO3 core table — no custom MM table).
 
+## AJAX API (FaqApiMiddleware)
+
+The extension registers a PSR-15 middleware (`FaqApiMiddleware`) intercepting requests
+at `/api/faq/*` before the TYPO3 frontend page resolver. The middleware is registered in
+`Configuration/RequestMiddlewares.php` (after `site`, before `page-resolver`).
+
+### Route Descriptors
+
+All endpoints are defined in the `FaqApiMiddleware::ROUTES` constant — a formal route descriptor
+table. Each route entry declares its handler method, HTTP method, description, and accepted
+parameters. Routes can be introspected via the static method `getRouteDescriptors()`.
+
+### Endpoint: `GET /api/faq/items`
+
+Fetches FAQ items with optional category filter, page scope, and configurable sort order.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `categoryUid` | `int` | Filter by category UID (`0` = all items) |
+| `pageUids` | `string` | Comma-separated storage page UIDs to scope the query |
+| `sort` | `string` | Sort field: `sorting` (default), `question`, `uid` |
+| `order` | `string` | Sort direction: `asc` (default), `desc` |
+
+The sort field is validated against a whitelist (`sorting`, `question`, `uid`) to prevent SQL
+injection. Invalid fields fall back to `sorting`.
+
+Response shape:
+```json
+{
+  "items": [
+    {
+      "uid": 1,
+      "question": "...",
+      "answer": "<p>...</p>",
+      "categories": [
+        { "uid": 5, "title": "Category Name" }
+      ]
+    }
+  ]
+}
+```
+
+### Endpoint: `GET /api/faq/categories`
+
+Fetches `sys_category` rows by their UIDs.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `categoryUids` | `string` | Comma-separated category UIDs (required) |
+
+Response shape:
+```json
+{
+  "categories": [
+    { "uid": 1, "title": "Category A" }
+  ]
+}
+```
+
+### Frontend Integration
+
+`faq.js` initialises the interactive FAQ widget on each `[data-faq-container]` element:
+
+| Data attribute | Element | Purpose |
+|---|---|---|
+| `data-faq-search` | `<input>` | Client-side live-search input |
+| `data-faq-tabs` | `<div>` | Category tab list (role="tablist") |
+| `data-faq-tab` | `<button>` | Individual category tab |
+| `data-faq-list` | `<div>` | FAQ items container |
+| `data-faq-sort` | `<select>` | Sort order dropdown |
+| `data-faq-no-results` | `<p>` | Hidden "no results" message |
+| `data-faq-container` | root `<div>` | Widget root — triggers JS init |
+| `data-faq-page-uids` | root attribute | Storage page UIDs (sent to API) |
+
+When a category tab is clicked, `faq.js` fetches `/api/faq/items` over AJAX with the current
+category, sort field, and sort order, then renders the returned items into the list container.
+Client-side search filtering runs on the already-loaded items without additional requests.
+
+Sort order is controlled by a `<select>` element (`[data-faq-sort]`). Changing the sort
+triggers a new AJAX request with the selected `sort` and `order` values.
+
+## Frontend Settings
+
+The TypoScript `plugin.tx_maifaq_list.settings` block includes:
+
+| Setting | Default | Description |
+|---|---|---|
+| `showCategoryTabs` | `1` | Show/hide the category tab bar |
+| `showSearch` | `1` | Show/hide the live-search widget |
+| `showSorting` | `1` | Show/hide the sort order dropdown |
+
 ## Architecture Constraints
 
 - **No custom category table.** Category taxonomy is handled exclusively via `sys_category`.
@@ -118,3 +209,6 @@ Relations are stored in `sys_category_record_mm` (TYPO3 core table — no custom
   for tab labels; it never writes to or modifies that table.
 - **Single action.** The `list` action is the only controller action and it is cacheable
   (registered as a non-uncached plugin action).
+- **API routes use PSR-15 middleware.** All AJAX endpoints are handled by the
+  `FaqApiMiddleware` (PSR-15), not by Extbase controllers. Route descriptors formally
+  define available paths, handlers, methods, and parameters.

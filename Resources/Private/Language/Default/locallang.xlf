@@ -15,6 +15,24 @@
             <trans-unit id="search.noResults">
                 <source>No FAQs found.</source>
             </trans-unit>
+            <trans-unit id="sort.label">
+                <source>Sort by</source>
+            </trans-unit>
+            <trans-unit id="sort.sorting.asc">
+                <source>Default order</source>
+            </trans-unit>
+            <trans-unit id="sort.question.asc">
+                <source>Alphabetical A–Z</source>
+            </trans-unit>
+            <trans-unit id="sort.question.desc">
+                <source>Alphabetical Z–A</source>
+            </trans-unit>
+            <trans-unit id="sort.uid.desc">
+                <source>Newest first</source>
+            </trans-unit>
+            <trans-unit id="sort.uid.asc">
+                <source>Oldest first</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

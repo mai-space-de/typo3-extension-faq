@@ -42,6 +42,9 @@
             <trans-unit id="flexform.field.showSearch">
                 <source>Show Search Filter</source>
             </trans-unit>
+            <trans-unit id="flexform.field.showSorting">
+                <source>Show Sort Dropdown</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
