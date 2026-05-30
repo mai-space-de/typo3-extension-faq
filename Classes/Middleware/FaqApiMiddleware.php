@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Maispace\MaiFaq\Middleware;
 
 use Maispace\MaiBase\Middleware\Api\AbstractApiMiddleware;
+use Maispace\MaiFaq\Attribute\Route;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -102,6 +103,17 @@ class FaqApiMiddleware extends AbstractApiMiddleware
      *
      * @param array<string, mixed>|null $queryParams  Optional overrides (used in tests)
      */
+    #[Route(
+        path: '/api/faq/items',
+        method: 'GET',
+        description: 'Fetch FAQ items, optionally filtered by category and page UIDs, with configurable sort order.',
+        parameters: [
+            'categoryUid' => 'int – filter by category UID (0 = all)',
+            'pageUids' => 'string – comma-separated storage page UIDs',
+            'sort' => 'string – sort field: sorting|question|uid (default: sorting)',
+            'order' => 'string – sort direction: asc|desc (default: asc)',
+        ],
+    )]
     public function handleItems(ServerRequestInterface $request, ?array $queryParams = null): ResponseInterface
     {
         $params = $queryParams ?? $request->getQueryParams();
@@ -163,6 +175,14 @@ class FaqApiMiddleware extends AbstractApiMiddleware
      *
      * @param array<string, mixed>|null $queryParams  Optional overrides (used in tests)
      */
+    #[Route(
+        path: '/api/faq/categories',
+        method: 'GET',
+        description: 'Fetch sys_category rows by their UIDs.',
+        parameters: [
+            'categoryUids' => 'string – comma-separated category UIDs (required)',
+        ],
+    )]
     public function handleCategories(ServerRequestInterface $request, ?array $queryParams = null): ResponseInterface
     {
         $params = $queryParams ?? $request->getQueryParams();

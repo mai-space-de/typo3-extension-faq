@@ -122,6 +122,11 @@ All endpoints are defined in the `FaqApiMiddleware::ROUTES` constant — a forma
 table. Each route entry declares its handler method, HTTP method, description, and accepted
 parameters. Routes can be introspected via the static method `getRouteDescriptors()`.
 
+Handler methods (`handleItems`, `handleCategories`) are annotated with `#[Route]` PHP attributes
+that mirror the route metadata at the method level for self-documentation and IDE support.
+The attributes serve documentation purposes only; the `ROUTES` constant remains the source of
+truth for runtime dispatch.
+
 ### Endpoint: `GET /api/faq/items`
 
 Fetches FAQ items with optional category filter, page scope, and configurable sort order.
