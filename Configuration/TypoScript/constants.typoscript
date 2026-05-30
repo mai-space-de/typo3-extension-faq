@@ -1,4 +1,4 @@
-plugin.tx_maifaq_list {
+plugin.tx_maifaq {
     view {
         templateRootPath =
         partialRootPath =
