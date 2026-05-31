@@ -18,6 +18,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 
 final class FaqApiMiddlewareTest extends TestCase
 {
@@ -32,10 +33,14 @@ final class FaqApiMiddlewareTest extends TestCase
     /** @var array{0: string, 1: string}|null Captured orderBy(field, direction) arguments */
     private ?array $capturedOrderBy = null;
 
+    /** @var list<string> Captured andWhere() constraint fragments */
+    private array $capturedAndWhere = [];
+
     protected function setUp(): void
     {
         $this->capturedJson = null;
         $this->capturedOrderBy = null;
+        $this->capturedAndWhere = [];
 
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
         $responseFactory->method('createResponse')->willReturnCallback(
@@ -448,6 +453,136 @@ final class FaqApiMiddlewareTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
+    // handleItems: language isolation
+    // -------------------------------------------------------------------------
+
+    #[Test]
+    public function handleItemsAppliesDefaultLanguageConstraint(): void
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+
+        $this->configureFaqResult([]);
+
+        $this->subject->handleItems($request, ['categoryUid' => 0, 'pageUids' => '']);
+
+        self::assertContains('f.sys_language_uid IN (0,-1)', $this->capturedAndWhere);
+    }
+
+    #[Test]
+    public function handleItemsAppliesTranslatedLanguageConstraint(): void
+    {
+        $language = $this->createMock(SiteLanguage::class);
+        $language->method('getLanguageId')->willReturn(2);
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getAttribute')->with('language')->willReturn($language);
+
+        $this->configureFaqResult([]);
+
+        $this->subject->handleItems($request, ['categoryUid' => 0, 'pageUids' => '']);
+
+        self::assertContains('f.sys_language_uid=2', $this->capturedAndWhere);
+    }
+
+    #[Test]
+    public function handleItemsFiltersByStoragePages(): void
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+
+        $this->configureFaqResult([]);
+
+        $this->subject->handleItems($request, ['categoryUid' => 0, 'pageUids' => '10,20']);
+
+        self::assertContains('f.pid IN (10,20)', $this->capturedAndWhere);
+    }
+
+    // -------------------------------------------------------------------------
+    // Filtering flow (category click → AJAX → render contract)
+    // -------------------------------------------------------------------------
+
+    #[Test]
+    public function categoryFilterFlowReturnsItemsForSelectedCategory(): void
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getUri')->willReturn($this->createUriMock('/api/faq/items'));
+        $request->method('getQueryParams')->willReturn(['categoryUid' => '5', 'pageUids' => '10']);
+
+        $this->configureFaqResult([
+            ['uid' => 42, 'question' => 'Filtered?', 'answer' => '<p>Yes</p>', 'pid' => 10, 'sorting' => 1],
+        ]);
+        $this->configureCategoryMmResult([
+            ['uid_foreign' => 42, 'uid' => 5, 'title' => 'Billing'],
+        ]);
+
+        $response = $this->subject->handle($request);
+        $body = $this->decodeResponse();
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertCount(1, $body['items']);
+        self::assertSame(42, $body['items'][0]['uid']);
+        self::assertSame('Filtered?', $body['items'][0]['question']);
+        self::assertSame(5, $body['items'][0]['categories'][0]['uid']);
+        self::assertContains('f.pid IN (10)', $this->capturedAndWhere);
+    }
+
+    #[Test]
+    public function categoryFilterFlowReturnsEmptyItemsWhenNoMatches(): void
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+
+        $this->configureFaqResult([]);
+
+        $response = $this->subject->handleItems($request, ['categoryUid' => 99, 'pageUids' => '']);
+        $body = $this->decodeResponse();
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame([], $body['items']);
+    }
+
+    #[Test]
+    public function itemsResponseConformsToDocumentedSchema(): void
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+
+        $this->configureFaqResult([
+            ['uid' => 1, 'question' => 'Q', 'answer' => '<p>A</p>', 'pid' => 10, 'sorting' => 1],
+        ]);
+        $this->configureCategoryMmResult([
+            ['uid_foreign' => 1, 'uid' => 3, 'title' => 'General'],
+        ]);
+
+        $response = $this->subject->handleItems($request, ['categoryUid' => 0, 'pageUids' => '']);
+        $body = $this->decodeResponse();
+
+        self::assertArrayHasKey('items', $body);
+        self::assertIsArray($body['items']);
+        $item = $body['items'][0];
+        self::assertArrayHasKey('uid', $item);
+        self::assertArrayHasKey('question', $item);
+        self::assertArrayHasKey('answer', $item);
+        self::assertArrayHasKey('categories', $item);
+        self::assertSame(3, $item['categories'][0]['uid']);
+        self::assertSame('General', $item['categories'][0]['title']);
+    }
+
+    #[Test]
+    public function categoriesResponseConformsToDocumentedSchema(): void
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+
+        $this->configureSysCategoryResult([
+            ['uid' => 7, 'title' => 'Support'],
+        ]);
+
+        $response = $this->subject->handleCategories($request, ['categoryUids' => '7']);
+        $body = $this->decodeResponse();
+
+        self::assertArrayHasKey('categories', $body);
+        self::assertSame(7, $body['categories'][0]['uid']);
+        self::assertSame('Support', $body['categories'][0]['title']);
+    }
+
+    // -------------------------------------------------------------------------
     // Helper
     // -------------------------------------------------------------------------
 
@@ -482,7 +617,12 @@ final class FaqApiMiddlewareTest extends TestCase
         $qb->method('select')->willReturnSelf();
         $qb->method('from')->willReturnSelf();
         $qb->method('where')->willReturnSelf();
-        $qb->method('andWhere')->willReturnSelf();
+        $qb->method('andWhere')->willReturnCallback(
+            function (mixed $constraint) use ($qb): QueryBuilder {
+                $this->capturedAndWhere[] = is_string($constraint) ? $constraint : (string) $constraint;
+                return $qb;
+            },
+        );
         $qb->method('join')->willReturnSelf();
         $qb->method('orderBy')->willReturnCallback(
             function (string $field, string $direction): QueryBuilder {

@@ -33,6 +33,9 @@ composer test           # Run all tests
 composer test:unit      # Run unit tests only
 ```
 
+Middleware filtering flow tests (`FaqApiMiddlewareTest`) cover language isolation, category
+filter AJAX contract, response schema, and edge cases. See `FEATURES.md` → Verification checklist.
+
 ---
 
 ## License

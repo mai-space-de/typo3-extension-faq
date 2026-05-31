@@ -13,6 +13,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 
 class FaqApiMiddleware extends AbstractApiMiddleware
 {
@@ -143,6 +144,8 @@ class FaqApiMiddleware extends AbstractApiMiddleware
                 $qb->expr()->in('f.pid', $qb->createNamedParameter($pageUidList, Connection::PARAM_INT_ARRAY)),
             );
         }
+
+        $this->addLanguageConstraint($qb, $this->resolveLanguageId($request));
 
         if ($categoryUid > 0) {
             $this->addCategoryJoin($qb, $categoryUid);
@@ -283,6 +286,43 @@ class FaqApiMiddleware extends AbstractApiMiddleware
     private function resolveSortOrder(string $order): string
     {
         return strtolower(trim($order)) === 'desc' ? 'DESC' : 'ASC';
+    }
+
+    /**
+     * Resolve the current site language from the PSR-7 request attribute.
+     * Falls back to the default language (uid 0) when no SiteLanguage is present.
+     */
+    private function resolveLanguageId(ServerRequestInterface $request): int
+    {
+        $language = $request->getAttribute('language');
+
+        return $language instanceof SiteLanguage ? (int) $language->getLanguageId() : 0;
+    }
+
+    /**
+     * Restrict FAQ rows to the active site language.
+     *
+     * Default language (uid 0) includes records marked "all languages" (uid -1).
+     */
+    private function addLanguageConstraint(QueryBuilder $qb, int $languageId): void
+    {
+        if ($languageId === 0) {
+            $qb->andWhere(
+                $qb->expr()->in(
+                    'f.sys_language_uid',
+                    $qb->createNamedParameter([0, -1], Connection::PARAM_INT_ARRAY),
+                ),
+            );
+
+            return;
+        }
+
+        $qb->andWhere(
+            $qb->expr()->eq(
+                'f.sys_language_uid',
+                $qb->createNamedParameter($languageId, Connection::PARAM_INT),
+            ),
+        );
     }
 
     /**

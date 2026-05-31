@@ -196,6 +196,100 @@ Client-side search filtering runs on the already-loaded items without additional
 Sort order is controlled by a `<select>` element (`[data-faq-sort]`). Changing the sort
 triggers a new AJAX request with the selected `sort` and `order` values.
 
+### Client-side search (parallel to AJAX filtering)
+
+Search and category filtering operate on two layers:
+
+| Layer | Trigger | Scope | Network |
+|---|---|---|---|
+| **Category / sort** | Tab click or sort `<select>` change | Server-side via `/api/faq/items` | AJAX fetch |
+| **Live search** | `input` on `[data-faq-search]` | Client-side on `currentItems` | None |
+
+After a category tab click, `faq.js` stores the API response in `currentItems` and re-renders
+the list. Typing in the search field normalises the query (lowercase, collapsed whitespace) and
+filters `currentItems` by matching against question text and stripped answer text — without
+issuing another API request. Both filters apply together: an item must match the active category
+*and* the search query to remain visible.
+
+The `[data-faq-no-results]` element is toggled when the combined filter yields zero visible items.
+
+### URL state
+
+URL/hash or History API state is **not** implemented. Changing category tabs or sort order does
+not update the browser URL and the back button does not restore prior filter state. Integrators
+requiring deep-linkable FAQ filters must add URL synchronisation in a site-specific overlay.
+
+### Language isolation
+
+FAQ items are localised via the standard TYPO3 `sys_language_uid` field (`setDefaultConfig()` on
+the TCA table). The AJAX middleware reads the current site language from the PSR-7 request
+attribute `language` (`SiteLanguage`):
+
+| Site language | SQL constraint on `tx_maifaq_faq.sys_language_uid` |
+|---|---|
+| Default (uid `0`) | `IN (0, -1)` — default-language and "all languages" records |
+| Translation (uid `> 0`) | `= <languageUid>` — translation records only |
+
+Because the middleware runs in the frontend site stack, requests to `/api/faq/items` on
+`/en/…`, `/uk/…`, or `/ar/…` automatically inherit the resolved site language. No explicit
+`languageUid` query parameter is required or accepted.
+
+Category tab labels come from `sys_category.title` for the UIDs configured in the FlexForm
+(`settings.categoryUids`). Configure language-appropriate category UIDs per site language so tab
+titles match the active language.
+
+### Accessibility
+
+Static markup in `List.html` provides:
+
+- `aria-label` on the widget root (`data-faq-container`)
+- Visible / screen-reader labels on search and sort controls
+- `role="tablist"` on the tab bar, `role="tab"` + `aria-selected` on each tab button
+- Native `<details>` / `<summary>` accordion semantics for FAQ items
+
+Dynamic behaviour (`faq.js`):
+
+- Updates `aria-selected` when the active category tab changes
+- Toggles `[data-faq-no-results]` visibility when filters yield no matches
+
+Known gaps (not yet implemented):
+
+- No `aria-controls` linking tabs to the item panel
+- No `aria-live` region announcing AJAX-rendered content changes
+- No focus management after category switch (focus remains on the clicked tab)
+
+### Error responses
+
+Non-2xx responses use the shared `AbstractApiMiddleware` error envelope:
+
+```json
+{
+  "error": {
+    "message": "Not found",
+    "code": 404
+  }
+}
+```
+
+Unknown paths under `/api/faq/*` return HTTP 404 with this shape.
+
+## Verification checklist
+
+Automated coverage lives in `Tests/Unit/Middleware/FaqApiMiddlewareTest.php`:
+
+| Check | Status | Notes |
+|---|---|---|
+| API items/categories per language | Covered | `handleItemsAppliesDefaultLanguageConstraint`, `handleItemsAppliesTranslatedLanguageConstraint` |
+| Client-side search parallel to AJAX | Documented | Search is client-only; category/sort use AJAX (see above) |
+| URL state on filter changes | Documented gap | Not implemented in `faq.js` |
+| ARIA for dynamic content | Partial | Static ARIA present; live region / focus gaps documented above |
+| Category click → AJAX → render flow | Covered | `categoryFilterFlowReturnsItemsForSelectedCategory`, empty-result variant |
+| API contract documented | This file | Endpoints, parameters, response shapes, error envelope |
+| Edge cases (no results, invalid UIDs) | Covered | `handleItemsReturnsEmptyArrayWhenNoItems`, `handleCategoriesFiltersOutInvalidUids`, flow empty test |
+
+Manual verification in DDEV: open a FAQ plugin page, click category tabs, type in search,
+change sort order, and repeat on `/en/` (and other site languages if content exists).
+
 ## Frontend Settings
 
 The TypoScript `plugin.tx_maifaq_list.settings` block includes:
