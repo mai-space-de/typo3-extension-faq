@@ -215,9 +215,21 @@ The `[data-faq-no-results]` element is toggled when the combined filter yields z
 
 ### URL state
 
-URL/hash or History API state is **not** implemented. Changing category tabs or sort order does
-not update the browser URL and the back button does not restore prior filter state. Integrators
-requiring deep-linkable FAQ filters must add URL synchronisation in a site-specific overlay.
+Category tab clicks, sort changes, and search input update the browser URL via the History API
+(hash-based: `#cat=5&sort=question&order=desc&q=...`). The `popstate` event restores filter state
+on back/forward navigation, making FAQ filters deep-linkable and preserving state across browser
+navigation.
+
+The hash is encoded with `URLSearchParams` and omits default values (`cat=all`, `sort=sorting`,
+`order=asc`, empty search) to keep URLs clean. On initial page load, the hash is parsed and the
+corresponding filter state is applied via AJAX (category/sort) or client-side filtering (search).
+
+| Hash param | Default | Description |
+|---|---|---|
+| `cat` | `all` | Active category tab UID |
+| `sort` | `sorting` | Sort field (`sorting`, `question`, `uid`) |
+| `order` | `asc` | Sort direction (`asc`, `desc`) |
+| `q` | _(empty)_ | Client-side search query |
 
 ### Language isolation
 
@@ -285,7 +297,7 @@ Automated coverage lives in `Tests/Unit/Middleware/FaqApiMiddlewareTest.php`:
 |---|---|---|
 | API items/categories per language | Covered | `handleItemsAppliesDefaultLanguageConstraint`, `handleItemsAppliesTranslatedLanguageConstraint` |
 | Client-side search parallel to AJAX | Documented | Search is client-only; category/sort use AJAX (see above) |
-| URL state on filter changes | Documented gap | Not implemented in `faq.js` |
+| URL state on filter changes | Implemented | History API hash sync in `faq.js` — deep-linkable, back/forward restores state |
 | ARIA for dynamic content | Covered | `FaqListTemplateA11yTest`; live region + focus in `faq.js` |
 | Category click → AJAX → render flow | Covered | `categoryFilterFlowReturnsItemsForSelectedCategory`, empty-result variant |
 | API contract documented | This file | Endpoints, parameters, response shapes, error envelope |

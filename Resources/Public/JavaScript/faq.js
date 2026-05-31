@@ -1,4 +1,6 @@
 (() => {
+    let faqPopstateBound = false;
+
     const initFaqWidget = (container) => {
         const searchInput = container.querySelector('[data-faq-search]');
         const tabsContainer = container.querySelector('[data-faq-tabs]');
@@ -126,6 +128,101 @@
             renderItems(currentItems, { announce: true, focusPanel: false });
         };
 
+        const getFilterState = () => ({
+            cat: activeCategory,
+            sort: sortField,
+            order: sortOrder,
+            q: searchQuery,
+        });
+
+        const encodeStateToHash = (state) => {
+            const params = new URLSearchParams();
+            if (state.cat && state.cat !== 'all') params.set('cat', state.cat);
+            if (state.sort && (state.sort !== 'sorting' || state.order !== 'asc')) {
+                params.set('sort', state.sort);
+                params.set('order', state.order || 'asc');
+            }
+            if (state.q) params.set('q', state.q);
+            return params.toString();
+        };
+
+        const decodeHashToState = (hash) => {
+            if (!hash) return null;
+            const params = new URLSearchParams(hash);
+            const cat = params.get('cat');
+            if (!cat && !params.has('sort') && !params.has('q')) return null;
+            return {
+                cat: cat || 'all',
+                sort: params.get('sort') || 'sorting',
+                order: params.get('order') || 'asc',
+                q: params.get('q') || '',
+            };
+        };
+
+        const pushURLState = () => {
+            const state = getFilterState();
+            const hash = encodeStateToHash(state);
+            const url = window.location.pathname + (hash ? '#' + hash : '');
+            history.pushState(state, '', url);
+        };
+
+        const replaceURLState = () => {
+            const state = getFilterState();
+            const hash = encodeStateToHash(state);
+            const url = window.location.pathname + (hash ? '#' + hash : '');
+            history.replaceState(state, '', url);
+        };
+
+        const applyStateFromURL = (state) => {
+            if (!state) return;
+
+            const prevCategory = activeCategory;
+            const prevSortField = sortField;
+            const prevSortOrder = sortOrder;
+
+            activeCategory = state.cat;
+            sortField = state.sort;
+            sortOrder = state.order;
+            searchQuery = state.q;
+
+            if (tabsContainer) {
+                tabsContainer.querySelectorAll('[data-faq-tab]').forEach((t) => {
+                    const isActive = t.dataset.faqTab === activeCategory;
+                    t.classList.toggle('mai-faq__tab--active', isActive);
+                    t.setAttribute('aria-selected', String(isActive));
+                    t.setAttribute('tabindex', isActive ? '0' : '-1');
+                    if (isActive) linkTabPanelToTab(t);
+                });
+            }
+
+            if (sortSelect) {
+                sortSelect.value = sortField + ',' + sortOrder;
+            }
+
+            if (searchInput) {
+                searchInput.value = searchQuery;
+            }
+
+            const categoryChanged = prevCategory !== activeCategory;
+            const sortChanged = prevSortField !== sortField || prevSortOrder !== sortOrder;
+            if (categoryChanged || sortChanged) {
+                const categoryUid = activeCategory === 'all' ? 0 : parseInt(activeCategory, 10);
+                loadItems(categoryUid, { announce: true, focusPanel: true });
+                return;
+            }
+
+            renderItems(currentItems, { announce: true, focusPanel: false });
+        };
+
+        if (!faqPopstateBound) {
+            window.addEventListener('popstate', (e) => {
+                if (e.state) {
+                    applyStateFromURL(e.state);
+                }
+            });
+            faqPopstateBound = true;
+        }
+
         const handleTabClick = async (tab) => {
             activeCategory = tab.dataset.faqTab;
 
@@ -140,6 +237,7 @@
 
             const categoryUid = activeCategory === 'all' ? 0 : parseInt(activeCategory, 10);
             await loadItems(categoryUid, { announce: true, focusPanel: true });
+            pushURLState();
         };
 
         if (tabsContainer) {
@@ -158,6 +256,7 @@
 
                 const categoryUid = activeCategory === 'all' ? 0 : parseInt(activeCategory, 10);
                 await loadItems(categoryUid, { announce: true, focusPanel: true });
+                pushURLState();
             });
         }
 
@@ -165,6 +264,7 @@
             searchInput.addEventListener('input', () => {
                 searchQuery = normalize(searchInput.value);
                 applyFilters();
+                replaceURLState();
             });
         }
 
@@ -178,6 +278,13 @@
                 .map((c) => c.trim())
                 .filter(Boolean),
         }));
+
+        const initialHash = window.location.hash.replace(/^#/, '');
+        const initialState = decodeHashToState(initialHash);
+        if (initialState) {
+            applyStateFromURL(initialState);
+        }
+        replaceURLState();
     };
 
     document.querySelectorAll('[data-faq-container]').forEach(initFaqWidget);
