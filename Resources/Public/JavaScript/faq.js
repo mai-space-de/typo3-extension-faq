@@ -5,7 +5,10 @@
         const faqList = container.querySelector('[data-faq-list]');
         const noResults = container.querySelector('[data-faq-no-results]');
         const sortSelect = container.querySelector('[data-faq-sort]');
+        const statusRegion = container.querySelector('[data-faq-status]');
         const pageUids = container.dataset.faqPageUids || '';
+        const msgResultsTemplate = container.dataset.faqMsgResults || '{count} FAQs shown.';
+        const msgNoResults = container.dataset.faqMsgNoResults || 'No FAQs found.';
 
         let activeCategory = 'all';
         let sortField = 'sorting';
@@ -26,6 +29,35 @@
             if (activeCategory === 'all') return true;
             const cats = (item.categories ?? []).map((c) => String(c.uid || c));
             return cats.includes(activeCategory);
+        };
+
+        const formatResultsMessage = (count) =>
+            msgResultsTemplate.replace('{count}', String(count));
+
+        const announceResults = (visibleCount) => {
+            if (!statusRegion) return;
+            statusRegion.textContent =
+                visibleCount > 0
+                    ? formatResultsMessage(visibleCount)
+                    : msgNoResults;
+        };
+
+        const updateTabRovingFocus = (activeTab) => {
+            if (!tabsContainer) return;
+            tabsContainer.querySelectorAll('[data-faq-tab]').forEach((t) => {
+                const isActive = t === activeTab;
+                t.setAttribute('tabindex', isActive ? '0' : '-1');
+            });
+        };
+
+        const linkTabPanelToTab = (tab) => {
+            if (!faqList || !tab?.id) return;
+            faqList.setAttribute('aria-labelledby', tab.id);
+        };
+
+        const focusTabPanel = () => {
+            if (!faqList) return;
+            faqList.focus({ preventScroll: true });
         };
 
         const buildItemElement = (item) => {
@@ -52,7 +84,8 @@
             return details;
         };
 
-        const renderItems = (items) => {
+        const renderItems = (items, options = {}) => {
+            const { announce = true, focusPanel = false } = options;
             faqList.innerHTML = '';
             let visibleCount = 0;
 
@@ -63,9 +96,11 @@
             });
 
             if (noResults) noResults.hidden = visibleCount > 0;
+            if (announce) announceResults(visibleCount);
+            if (focusPanel) focusTabPanel();
         };
 
-        const loadItems = async (categoryUid) => {
+        const loadItems = async (categoryUid, options = {}) => {
             const params = new URLSearchParams();
             if (categoryUid > 0) params.set('categoryUid', String(categoryUid));
             if (pageUids) params.set('pageUids', pageUids);
@@ -81,14 +116,14 @@
                     answer: item.answer,
                     categories: item.categories ?? [],
                 }));
-                renderItems(currentItems);
+                renderItems(currentItems, options);
             } catch (e) {
                 console.error('Failed to load FAQ items:', e);
             }
         };
 
         const applyFilters = () => {
-            renderItems(currentItems);
+            renderItems(currentItems, { announce: true, focusPanel: false });
         };
 
         const handleTabClick = async (tab) => {
@@ -100,8 +135,11 @@
                 t.setAttribute('aria-selected', String(isActive));
             });
 
+            updateTabRovingFocus(tab);
+            linkTabPanelToTab(tab);
+
             const categoryUid = activeCategory === 'all' ? 0 : parseInt(activeCategory, 10);
-            await loadItems(categoryUid);
+            await loadItems(categoryUid, { announce: true, focusPanel: true });
         };
 
         if (tabsContainer) {
@@ -119,7 +157,7 @@
                 sortOrder = order || 'asc';
 
                 const categoryUid = activeCategory === 'all' ? 0 : parseInt(activeCategory, 10);
-                await loadItems(categoryUid);
+                await loadItems(categoryUid, { announce: true, focusPanel: true });
             });
         }
 

@@ -249,14 +249,18 @@ Static markup in `List.html` provides:
 
 Dynamic behaviour (`faq.js`):
 
-- Updates `aria-selected` when the active category tab changes
+- Updates `aria-selected` and roving `tabindex` when the active category tab changes
+- Sets `aria-labelledby` on the tab panel to the active tab’s `id`
 - Toggles `[data-faq-no-results]` visibility when filters yield no matches
+- Announces result counts in `[data-faq-status]` (`aria-live="polite"`) after AJAX loads,
+  sort changes, and client-side search filtering
+- Moves focus to `#mai-faq-tabpanel` after category or sort changes (AJAX reload)
 
-Known gaps (not yet implemented):
+Static markup (`List.html`):
 
-- No `aria-controls` linking tabs to the item panel
-- No `aria-live` region announcing AJAX-rendered content changes
-- No focus management after category switch (focus remains on the clicked tab)
+- `aria-controls="mai-faq-tabpanel"` on each category tab
+- `#mai-faq-tabpanel` with `role="tabpanel"` and `tabindex="-1"` for programmatic focus
+- Translated `data-faq-msg-results` / `data-faq-msg-no-results` on the widget root for JS announcements
 
 ### Error responses
 
@@ -282,7 +286,7 @@ Automated coverage lives in `Tests/Unit/Middleware/FaqApiMiddlewareTest.php`:
 | API items/categories per language | Covered | `handleItemsAppliesDefaultLanguageConstraint`, `handleItemsAppliesTranslatedLanguageConstraint` |
 | Client-side search parallel to AJAX | Documented | Search is client-only; category/sort use AJAX (see above) |
 | URL state on filter changes | Documented gap | Not implemented in `faq.js` |
-| ARIA for dynamic content | Partial | Static ARIA present; live region / focus gaps documented above |
+| ARIA for dynamic content | Covered | `FaqListTemplateA11yTest`; live region + focus in `faq.js` |
 | Category click → AJAX → render flow | Covered | `categoryFilterFlowReturnsItemsForSelectedCategory`, empty-result variant |
 | API contract documented | This file | Endpoints, parameters, response shapes, error envelope |
 | Edge cases (no results, invalid UIDs) | Covered | `handleItemsReturnsEmptyArrayWhenNoItems`, `handleCategoriesFiltersOutInvalidUids`, flow empty test |

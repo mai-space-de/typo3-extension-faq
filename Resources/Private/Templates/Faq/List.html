@@ -10,6 +10,8 @@
         data-faq-container="1"
         data-faq-page-uids="{settings.pages}"
         data-faq-category-uids="{settings.categoryUids}"
+        data-faq-msg-results="{f:translate(key: 'a11y.resultsShown', extensionName: 'mai_faq')}"
+        data-faq-msg-no-results="{f:translate(key: 'search.noResults', extensionName: 'mai_faq')}"
         aria-label="{f:translate(key: 'search.label', extensionName: 'mai_faq')}"
     >
         <div class="mai-faq__toolbar">
@@ -65,7 +67,10 @@
                     type="button"
                     class="mai-faq__tab mai-faq__tab--active"
                     role="tab"
+                    id="mai-faq-tab-all"
                     aria-selected="true"
+                    aria-controls="mai-faq-tabpanel"
+                    tabindex="0"
                     data-faq-tab="all"
                 >
                     <f:translate key="faq.all" extensionName="mai_faq"/>
@@ -75,7 +80,10 @@
                         type="button"
                         class="mai-faq__tab"
                         role="tab"
+                        id="mai-faq-tab-{category.uid}"
                         aria-selected="false"
+                        aria-controls="mai-faq-tabpanel"
+                        tabindex="-1"
                         data-faq-tab="{category.uid}"
                     >
                         {category.title}
@@ -84,7 +92,22 @@
             </div>
         </f:if>
 
-        <div class="mai-faq__list" data-faq-list="1">
+        <div
+            class="mai-faq__status sr-only"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            data-faq-status="1"
+        ></div>
+
+        <div
+            class="mai-faq__list"
+            id="mai-faq-tabpanel"
+            role="tabpanel"
+            tabindex="-1"
+            aria-labelledby="mai-faq-tab-all"
+            data-faq-list="1"
+        >
             <f:if condition="{faqs}">
                 <f:then>
                     <f:for each="{faqs}" as="faq">

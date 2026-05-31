@@ -15,6 +15,9 @@
             <trans-unit id="search.noResults">
                 <source>No FAQs found.</source>
             </trans-unit>
+            <trans-unit id="a11y.resultsShown">
+                <source>{count} FAQs shown.</source>
+            </trans-unit>
             <trans-unit id="sort.label">
                 <source>Sort by</source>
             </trans-unit>
