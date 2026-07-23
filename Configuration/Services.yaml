@@ -7,3 +7,7 @@ services:
   Maispace\MaiFaq\:
     resource: '../Classes/*'
     exclude: '../Classes/Domain/Model/*'
+
+  # DataHandler instantiates hooks via GeneralUtility::makeInstance() — must be public for DI
+  Maispace\MaiFaq\Hook\FaqCacheInvalidationHook:
+    public: true

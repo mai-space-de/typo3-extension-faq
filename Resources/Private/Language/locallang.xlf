@@ -1,51 +1,40 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2024-01-01T00:00:00Z" product-name="mai_faq">
+    <file source-language="en" datatype="plaintext" original="messages" date="2024-01-01T00:00:00Z" product-name="mai_faq">
         <header/>
         <body>
             <trans-unit id="faq.all">
                 <source>All</source>
-                <target>Alle</target>
             </trans-unit>
             <trans-unit id="search.placeholder">
                 <source>Search FAQs...</source>
-                <target>FAQ durchsuchen...</target>
             </trans-unit>
             <trans-unit id="search.label">
                 <source>Filter FAQs</source>
-                <target>FAQ filtern</target>
             </trans-unit>
             <trans-unit id="search.noResults">
                 <source>No FAQs found.</source>
-                <target>Keine FAQ gefunden.</target>
             </trans-unit>
             <trans-unit id="a11y.resultsShown">
                 <source>{count} FAQs shown.</source>
-                <target>{count} FAQs angezeigt.</target>
             </trans-unit>
             <trans-unit id="sort.label">
                 <source>Sort by</source>
-                <target>Sortieren nach</target>
             </trans-unit>
             <trans-unit id="sort.sorting.asc">
                 <source>Default order</source>
-                <target>Standardreihenfolge</target>
             </trans-unit>
             <trans-unit id="sort.question.asc">
                 <source>Alphabetical A–Z</source>
-                <target>Alphabetisch A–Z</target>
             </trans-unit>
             <trans-unit id="sort.question.desc">
                 <source>Alphabetical Z–A</source>
-                <target>Alphabetisch Z–A</target>
             </trans-unit>
             <trans-unit id="sort.uid.desc">
                 <source>Newest first</source>
-                <target>Neueste zuerst</target>
             </trans-unit>
             <trans-unit id="sort.uid.asc">
                 <source>Oldest first</source>
-                <target>Älteste zuerst</target>
             </trans-unit>
         </body>
     </file>
