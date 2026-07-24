@@ -3,61 +3,49 @@
     <sheets>
         <sDEF>
             <ROOT>
-                <TCEforms>
-                    <sheetTitle>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.sheet.general</sheetTitle>
-                </TCEforms>
+                <sheetTitle>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.sheet.general</sheetTitle>
                 <type>array</type>
                 <el>
                     <settings.pages>
-                        <TCEforms>
-                            <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.pages</label>
-                            <config>
-                                <type>group</type>
-                                <allowed>pages</allowed>
-                                <size>5</size>
-                                <maxitems>20</maxitems>
-                                <minitems>0</minitems>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.pages</label>
+                        <config>
+                            <type>group</type>
+                            <allowed>pages</allowed>
+                            <size>5</size>
+                            <maxitems>20</maxitems>
+                            <minitems>0</minitems>
+                        </config>
                     </settings.pages>
                     <settings.categoryUids>
-                        <TCEforms>
-                            <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.categoryUids</label>
-                            <config>
-                                <type>category</type>
-                                <relationship>manyToMany</relationship>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.categoryUids</label>
+                        <config>
+                            <type>category</type>
+                            <relationship>oneToMany</relationship>
+                        </config>
                     </settings.categoryUids>
                     <settings.showCategoryTabs>
-                        <TCEforms>
-                            <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.showCategoryTabs</label>
-                            <config>
-                                <type>check</type>
-                                <renderType>checkboxToggle</renderType>
-                                <default>1</default>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.showCategoryTabs</label>
+                        <config>
+                            <type>check</type>
+                            <renderType>checkboxToggle</renderType>
+                            <default>1</default>
+                        </config>
                     </settings.showCategoryTabs>
                     <settings.showSearch>
-                        <TCEforms>
-                            <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.showSearch</label>
-                            <config>
-                                <type>check</type>
-                                <renderType>checkboxToggle</renderType>
-                                <default>1</default>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.showSearch</label>
+                        <config>
+                            <type>check</type>
+                            <renderType>checkboxToggle</renderType>
+                            <default>1</default>
+                        </config>
                     </settings.showSearch>
                     <settings.showSorting>
-                        <TCEforms>
-                            <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.showSorting</label>
-                            <config>
-                                <type>check</type>
-                                <renderType>checkboxToggle</renderType>
-                                <default>1</default>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:mai_faq/Resources/Private/Language/Default/locallang_tca.xlf:flexform.field.showSorting</label>
+                        <config>
+                            <type>check</type>
+                            <renderType>checkboxToggle</renderType>
+                            <default>1</default>
+                        </config>
                     </settings.showSorting>
                 </el>
             </ROOT>
