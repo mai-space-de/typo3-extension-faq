@@ -30,7 +30,7 @@ A single Extbase plugin is registered:
 
 | Identifier | Controller action | Plugin type |
 |---|---|---|
-| `maispace_faq_list` | `FaqController::listAction` | Content element (not USER_INT) |
+| `maifaq_list` | `FaqController::listAction` | Content element (not USER_INT) |
 
 The content element belongs to the `maispace_feature` group in the backend.
 
