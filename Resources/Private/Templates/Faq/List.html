@@ -124,7 +124,7 @@
                                 {faq.question}
                             </summary>
                             <div class="mai-faq__answer">
-                                <f:format.html>{faq.answer}</f:format.html>
+                                <f:render.text record="{faq}" field="answer" />
                             </div>
                         </details>
                     </f:for>

@@ -13,6 +13,8 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Pagination\QueryBuilderPaginator;
+use TYPO3\CMS\Core\Pagination\SimplePagination;
 
 class FaqController extends AbstractActionController
 {
@@ -34,22 +36,23 @@ class FaqController extends AbstractActionController
         $this->assetCollector = $assetCollector;
     }
 
-    public function listAction(): ResponseInterface
+    public function listAction(int $page = 1): ResponseInterface
     {
         $settings = $this->getSettings();
 
         $pageUids = $this->resolveStoragePageUids();
         $categoryUid = (int) ($settings['categoryUid'] ?? 0);
+        $itemsPerPage = (int) ($settings['limit'] ?? 10);
 
-        if ($pageUids !== [] && $categoryUid > 0) {
-            $faqs = $this->faqRepository->findFromPagesByCategoryUid($pageUids, $categoryUid);
-        } elseif ($pageUids !== []) {
-            $faqs = $this->faqRepository->findFromPages($pageUids);
-        } elseif ($categoryUid > 0) {
-            $faqs = $this->faqRepository->findByCategoryUid($categoryUid);
-        } else {
-            $faqs = $this->faqRepository->findAll();
-        }
+        $queryBuilder = $this->faqRepository->createQueryBuilderForPagination($pageUids, $categoryUid);
+
+        $paginator = new QueryBuilderPaginator(
+            $queryBuilder,
+            $page,
+            $itemsPerPage
+        );
+
+        $pagination = new SimplePagination($paginator);
 
         $categories = $this->resolveCategories($settings);
 
@@ -59,7 +62,10 @@ class FaqController extends AbstractActionController
         );
 
         $this->view->assignMultiple([
-            'faqs' => $faqs,
+            'faqs' => $paginator->getPaginatedItems(),
+            'pagination' => $pagination,
+            'paginator' => $paginator,
+            'currentPage' => $page,
             'categories' => $categories,
             'activeCategoryUid' => $categoryUid,
             'settings' => $settings,
