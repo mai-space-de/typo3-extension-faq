@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Maispace\MaiFaq\Indexer;
 
-use ApacheSolrForTypo3\Solr\System\Solr\Document\Document;
 use Maispace\MaiFaq\Domain\Model\Faq;
 use Maispace\MaiSearch\Domain\Dto\SearchResult;
 use Maispace\MaiSearch\Domain\Model\IndexingContext;
@@ -61,9 +60,7 @@ class FaqIndexer extends AbstractIndexer implements SearchResultFormatterInterfa
             return;
         }
 
-        $connection = $this->connectionFactory->getConnection();
-        $connection->deleteByQuery('id:' . $this->getType() . '-' . $uid);
-        $connection->commit(false, false);
+        $this->removeDocument($uid);
     }
 
     protected function buildContent(object $record): string
