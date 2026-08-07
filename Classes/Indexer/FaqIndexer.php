@@ -23,6 +23,11 @@ class FaqIndexer extends AbstractIndexer implements SearchResultFormatterInterfa
         return 'faq';
     }
 
+    public function getTableName(): string
+    {
+        return self::TABLE_NAME;
+    }
+
     public function supports(string $table): bool
     {
         return $table === self::TABLE_NAME;
