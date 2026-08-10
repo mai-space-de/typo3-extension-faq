@@ -47,7 +47,7 @@ Assigned template variables:
 
 | Variable | Type | Description |
 |---|---|---|
-| `faqs` | `QueryResultInterface` | Ordered FAQ items |
+| `faqs` | `iterable<Faq>` | Paginated FAQ models (`QueryResultPaginator`) |
 | `categories` | `array` | Each element: `['uid' => int, 'title' => string]` |
 | `activeCategoryUid` | `int` | Selected category (0 = all) |
 | `settings` | `array` | FlexForm and TypoScript merged settings |

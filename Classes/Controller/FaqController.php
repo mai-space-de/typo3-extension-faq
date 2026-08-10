@@ -7,19 +7,20 @@ namespace Maispace\MaiFaq\Controller;
 use Maispace\MaiBase\Controller\AbstractActionController;
 use Maispace\MaiBase\Controller\Traits\AppendDataToPluginVariablesTrait;
 use Maispace\MaiBase\Controller\Traits\PageRendererTrait;
+use Maispace\MaiBase\Controller\Traits\PaginationTrait;
 use Maispace\MaiFaq\Domain\Repository\FaqRepository;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\Pagination\QueryBuilderPaginator;
-use TYPO3\CMS\Core\Pagination\SimplePagination;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 class FaqController extends AbstractActionController
 {
     use AppendDataToPluginVariablesTrait;
     use PageRendererTrait;
+    use PaginationTrait;
 
     public function __construct(
         private readonly FaqRepository $faqRepository,
@@ -36,23 +37,15 @@ class FaqController extends AbstractActionController
         $this->assetCollector = $assetCollector;
     }
 
-    public function listAction(int $page = 1): ResponseInterface
+    public function listAction(): ResponseInterface
     {
         $settings = $this->getSettings();
 
         $pageUids = $this->resolveStoragePageUids();
         $categoryUid = (int) ($settings['categoryUid'] ?? 0);
-        $itemsPerPage = (int) ($settings['limit'] ?? 10);
 
-        $queryBuilder = $this->faqRepository->createQueryBuilderForPagination($pageUids, $categoryUid);
-
-        $paginator = new QueryBuilderPaginator(
-            $queryBuilder,
-            $page,
-            $itemsPerPage
-        );
-
-        $pagination = new SimplePagination($paginator);
+        $faqs = $this->resolveFaqs($pageUids, $categoryUid);
+        $pagination = $this->paginateQueryResult($faqs, (int) ($settings['limit'] ?? 10));
 
         $categories = $this->resolveCategories($settings);
 
@@ -62,16 +55,35 @@ class FaqController extends AbstractActionController
         );
 
         $this->view->assignMultiple([
-            'faqs' => $paginator->getPaginatedItems(),
-            'pagination' => $pagination,
-            'paginator' => $paginator,
-            'currentPage' => $page,
+            'faqs' => $pagination['paginator']->getPaginatedItems(),
+            'pagination' => $pagination['pagination'],
+            'paginator' => $pagination['paginator'],
             'categories' => $categories,
             'activeCategoryUid' => $categoryUid,
             'settings' => $settings,
         ]);
 
         return $this->htmlResponse();
+    }
+
+    /**
+     * @param list<int> $pageUids
+     */
+    private function resolveFaqs(array $pageUids, int $categoryUid): QueryResultInterface
+    {
+        if ($pageUids !== [] && $categoryUid > 0) {
+            return $this->faqRepository->findFromPagesByCategoryUid($pageUids, $categoryUid);
+        }
+
+        if ($pageUids !== []) {
+            return $this->faqRepository->findFromPages($pageUids);
+        }
+
+        if ($categoryUid > 0) {
+            return $this->faqRepository->findByCategoryUid($categoryUid);
+        }
+
+        return $this->faqRepository->findAll();
     }
 
     private function resolveStoragePageUids(): array
