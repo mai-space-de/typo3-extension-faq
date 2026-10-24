@@ -12,7 +12,8 @@ $lang = Helper::localLangHelperFactory('mai_faq', 'Default/locallang_tca.xlf');
     'MaiFaq',
     'List',
     $lang('plugin.list.title'),
-    'mai-content',
+    'mai-faq',
+
     'maispace_plugins_lists',
     '',
     'FILE:EXT:mai_faq/Configuration/FlexForms/FaqPlugin.xml',
