@@ -11,3 +11,21 @@ services:
   # DataHandler instantiates hooks via GeneralUtility::makeInstance() — must be public for DI
   Maispace\MaiFaq\Hook\FaqCacheInvalidationHook:
     public: true
+
+  dashboard.widget.maiFaqManual:
+    class: 'ProudNerds\PnBackendManual\Widgets\ManualWidget'
+    arguments:
+      $options:
+        file: 'EXT:mai_faq/Resources/Private/Manual/Manual.md'
+        numbered: true
+        contentsDepth: 2
+        printButton: true
+    tags:
+      - name: dashboard.widget
+        identifier: 'maiFaqManual'
+        groupNames: 'documentation'
+        title: 'Handbuch: FAQ'
+        description: 'Kurze Anleitung für Frage-Antwort-Einträge.'
+        iconIdentifier: 'content-book'
+        height: 'medium'
+        width: 'medium'
