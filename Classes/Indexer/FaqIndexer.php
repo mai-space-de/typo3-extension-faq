@@ -10,7 +10,6 @@ use Maispace\MaiSearch\Domain\Model\IndexingContext;
 use Maispace\MaiSearch\Domain\Service\SearchResultFormatterInterface;
 use Maispace\MaiSearch\Indexer\AbstractIndexer;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 
@@ -31,13 +30,6 @@ class FaqIndexer extends AbstractIndexer implements SearchResultFormatterInterfa
     public function supports(string $table): bool
     {
         return $table === self::TABLE_NAME;
-    }
-
-    public function indexAll(IndexingContext $context): void
-    {
-        foreach ($this->getRecordsForIndexing($context) as $record) {
-            $this->indexRecord($record, $context);
-        }
     }
 
     public function indexRecord(object $record, IndexingContext $context): void
@@ -84,10 +76,7 @@ class FaqIndexer extends AbstractIndexer implements SearchResultFormatterInterfa
         }
 
         try {
-            $site = GeneralUtility::makeInstance(SiteFinder::class)->getSiteByPageId((int) $record->getPid());
-            $uri = $site->getRouter()->generateUri((int) $record->getPid());
-
-            return (string) $uri;
+            return $this->generateLanguageAwarePageUri((int) $record->getPid());
         } catch (\Exception) {
             return '';
         }
