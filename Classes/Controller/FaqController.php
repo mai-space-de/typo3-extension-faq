@@ -49,7 +49,7 @@ class FaqController extends AbstractActionController
 
         $categories = $this->resolveCategories($settings);
 
-        $this->addJsFile(
+        $this->addDeferredJsFile(
             'mai_faq',
             'EXT:mai_faq/Resources/Public/JavaScript/faq.js',
         );
